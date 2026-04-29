@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="tg">
+<head>
+<meta charset="UTF-8">
+<title>Tests Information</title>
+<style>
+body{font-family:Arial;background:#f3f4f6;margin:0}
+.container{max-width:800px;margin:auto;padding:20px}
+.card{background:white;padding:20px;margin-top:20px;border-radius:10px}
+button{padding:10px;background:#2563eb;color:white;border:none;border-radius:8px}
+.option{display:block;margin:5px 0}
+.hidden{display:none}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div id="reg" class="card">
+<h2>Регистратсия</h2>
+<input id="name" placeholder="Ному насаб">
+<br><br>
+<button onclick="start()">Оғоз</button>
+</div>
+
+<div id="test" class="card hidden">
+<h2>Тест</h2>
+<div id="q"></div>
+<button onclick="finish()">Анҷом</button>
+</div>
+
+<div id="res" class="card hidden">
+<h2>Натиҷа</h2>
+<p id="score"></p>
+<button onclick="cert()">Сертификат</button>
+</div>
+
+</div>
+
+<script>
+
+let user="";
+let quiz=[
+{q:"HTML чист?",a:"Web language",b:"Car",c:"Food",d:"Game",correct:"a"},
+{q:"CSS чист?",a:"Design",b:"Logic",c:"DB",d:"OS",correct:"a"},
+{q:"JS чист?",a:"Programming",b:"Mouse",c:"Book",d:"Phone",correct:"a"}
+];
+
+while(quiz.length<30){
+quiz.push({q:"Question "+quiz.length,a:"A",b:"B",c:"C",d:"D",correct:"a"});
+}
+
+function start(){
+user=document.getElementById("name").value;
+document.getElementById("reg").classList.add("hidden");
+document.getElementById("test").classList.remove("hidden");
+
+let html="";
+quiz.forEach((x,i)=>{
+html+=`
+<div class="card">
+<p>${i+1}. ${x.q}</p>
+<label class="option"><input type="radio" name="q${i}" value="a"> ${x.a}</label>
+<label class="option"><input type="radio" name="q${i}" value="b"> ${x.b}</label>
+<label class="option"><input type="radio" name="q${i}" value="c"> ${x.c}</label>
+<label class="option"><input type="radio" name="q${i}" value="d"> ${x.d}</label>
+</div>`;
+});
+document.getElementById("q").innerHTML=html;
+}
+
+function finish(){
+let score=0;
+
+quiz.forEach((q,i)=>{
+let ans=document.querySelector(`input[name="q${i}"]:checked`);
+if(ans && ans.value===q.correct) score++;
+});
+
+document.getElementById("test").classList.add("hidden");
+document.getElementById("res").classList.remove("hidden");
+
+document.getElementById("score").innerText=score+"/30";
+}
+
+function cert(){
+let canvas=document.createElement("canvas");
+canvas.width=800;
+canvas.height=500;
+let ctx=canvas.getContext("2d");
+
+ctx.fillStyle="white";
+ctx.fillRect(0,0,800,500);
+
+ctx.fillStyle="black";
+ctx.font="30px Arial";
+ctx.fillText("Certificate",300,100);
+ctx.fillText("Name: "+user,200,200);
+ctx.fillText("Score: "+document.getElementById("score").innerText,200,260);
+ctx.fillText("Author: Toktobaev Shahrom",200,350);
+
+let a=document.createElement("a");
+a.download="certificate.png";
+a.href=canvas.toDataURL();
+a.click();
+}
+
+</script>
+
+</body>
+</html>
